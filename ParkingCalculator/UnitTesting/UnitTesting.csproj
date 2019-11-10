@@ -55,9 +55,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ParkingCalculator\ParkingFeeCalculator.csproj">
-      <Project>{c5c555ab-ab73-4ef3-9986-61d4bc355dc6}</Project>
-      <Name>ParkingFeeCalculator</Name>
+    <ProjectReference Include="..\ParkingAPI\ParkingAPI.csproj">
+      <Project>{7c2e795f-988f-48e6-aad0-5de77fe430a6}</Project>
+      <Name>ParkingAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
