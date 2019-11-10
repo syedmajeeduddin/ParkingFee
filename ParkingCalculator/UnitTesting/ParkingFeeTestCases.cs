@@ -8,6 +8,8 @@ using ParkingFeeCalculatorAPI;
 namespace UnitTesting
 {
     [TestClass]
+
+    //My test cases 
     public class ParkingFeeTestCases
     {
         ParkingFeeCalculator api = new ParkingFeeCalculator();         
