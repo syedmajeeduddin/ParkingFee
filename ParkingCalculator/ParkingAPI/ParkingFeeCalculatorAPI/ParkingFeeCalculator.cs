@@ -9,6 +9,9 @@ namespace ParkingFeeCalculatorAPI
 {
     public class ParkingFeeCalculator : IParkingCalculation
     {
+        Charges _charges = null;
+
+
         /// <summary>
         ///  Calculates the Parking Fee and returns a Charges complex object to 
         ///  encapsulate the multiple Rates that may have been used 
@@ -22,7 +25,7 @@ namespace ParkingFeeCalculatorAPI
         {
             try { 
             
-            Charges _charges = null;
+            
             if (startDate < endDate)
             {
                 if (_charges == null)

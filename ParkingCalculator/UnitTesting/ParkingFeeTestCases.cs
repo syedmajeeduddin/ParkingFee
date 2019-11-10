@@ -21,7 +21,7 @@ namespace UnitTesting
             //Check-Out at 4 p.m
             var startDateString = "2019/11/08 08:00";
             var endDateString  = "2019/11/08 16:00";
-            //DateTime.ParseExact(startDateString, "yyyy/MM/dd HH:mm", CultureInfo.InvariantCulture
+            
             var charge = api.CalculateParkingFee( DateTime.Parse(startDateString),
                                                 DateTime.Parse(endDateString));
 
