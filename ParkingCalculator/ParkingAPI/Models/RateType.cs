@@ -16,5 +16,8 @@ namespace Models
 
         public double Charge { get; set; }
 
+        public DateTime? ActualDate  { get; set; }
+
+        
     }
 }

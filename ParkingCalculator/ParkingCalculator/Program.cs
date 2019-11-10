@@ -32,6 +32,7 @@ namespace ParkingCalculator
             {
                 Console.WriteLine("You have entered an incorrect start value.");
                 Console.ReadLine();
+                return;
             }
 
             Console.WriteLine("Enter a End date (Format: YYYY/MM/DD HH:MM): ");
@@ -44,6 +45,7 @@ namespace ParkingCalculator
             {
                 Console.WriteLine("You have entered an incorrect Enddate value.");
                 Console.ReadLine();
+                return;
             }
 
            
@@ -54,11 +56,33 @@ namespace ParkingCalculator
                 Console.WriteLine("Start Date " + start.ToLongDateString() + " Time " + start.ToShortTimeString());
                 Console.WriteLine("End Date " + end.ToLongDateString() + " Time " + end.ToShortTimeString());
 
-                var Api = new ParkingFeeCalculator();
-                var charges =  Api.CalculateParkingFee(start, end);
+                try
 
-                //TODO : NEED TO DISPLAY Applied CHARGE RATES Which is a property in Charges 
-                Console.WriteLine($"Total Charges : {charges.TotalCharge.ToString()}");
+                { 
+                    var Api = new ParkingFeeCalculator();
+                    var charges =  Api.CalculateParkingFee(start, end);
+
+
+                    //Display all the applied rates when a car is parked for more than 1 day.
+                    Console.WriteLine("============ Parking Rates Applied ===================");
+                    foreach (var rate in charges.ApplicableRates)
+                    {
+                        Console.WriteLine($" Rate Name : {rate.Name} ||  Charge : {rate.Charge}  || {(rate.ActualDate.HasValue ? "On " + rate.ActualDate.Value.DayOfWeek.ToString() : string.Empty)}");
+
+                    }
+                    Console.WriteLine("=======================================================");
+                    Console.WriteLine("=======================================================");
+                    Console.WriteLine($"Total Charges : {charges.TotalCharge.ToString()}");
+                    Console.WriteLine("=======================================================");
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"Fatal error occurred : { ex.Message}");
+                    Console.ReadKey();
+                    return;
+                }
+
+               
 
             }
             else

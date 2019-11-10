@@ -46,24 +46,25 @@ namespace Models
         
         public void CalculateStandardAndWeekendRates()
         {
+
             var dateRanges = Helper.GetDatesBetween(StartDate, EndDate);
             RateType rateTemplate;
 
             //start and end date are same 
-            if (dateRanges.Count() == 0)
+            if (StartDate.Date == EndDate.Date)
             {
                 //check if it is a Business Day/ WeekDay
                 var isBusinessDay = Helper.IsBusinessDay(StartDate.Date);
 
                 if (isBusinessDay)
                 {
-                    rateTemplate = GetRateTemplate(RateNames.StandardRate, Helper.CalculateStandardRate(EndDate.Subtract(StartDate).TotalHours));
+                    rateTemplate = GetRateTemplate(RateNames.StandardRate, Helper.CalculateStandardRate(EndDate.Subtract(StartDate).TotalHours),StartDate.Date );
                     ApplicableRates.Add(rateTemplate);                   
                 }
                 else
                 {
                     //If Weekend 
-                    rateTemplate = GetRateTemplate(RateNames.WeekendRate, Helper.CalculateWeekendRate());                    
+                    rateTemplate = GetRateTemplate(RateNames.WeekendRate, Helper.CalculateWeekendRate(), StartDate.Date);                    
                     ApplicableRates.Add(rateTemplate);
                 }
 
@@ -74,12 +75,12 @@ namespace Models
                 if (Helper.IsBusinessDay(StartDate))
                 {
                     var fee = Helper.CalculateStandardRate((StartDate.Date.AddDays(1).AddSeconds(-1)).Subtract(StartDate).TotalHours);
-                    rateTemplate = GetRateTemplate(RateNames.StandardRate, fee); 
+                    rateTemplate = GetRateTemplate(RateNames.StandardRate, fee , StartDate.Date); 
                     ApplicableRates.Add(rateTemplate);
                 }
                 else
                 {
-                    rateTemplate = GetRateTemplate(RateNames.WeekendRate, Helper.CalculateWeekendRate());
+                    rateTemplate = GetRateTemplate(RateNames.WeekendRate, Helper.CalculateWeekendRate(), StartDate.Date);
                     ApplicableRates.Add(rateTemplate);
                 }
 
@@ -89,7 +90,7 @@ namespace Models
                     rateTemplate = null;
                     if (dt.IsBusinessDay)
                     {
-                        rateTemplate = GetRateTemplate(RateNames.StandardRate, BusinessDayRates.DayRate);
+                        rateTemplate = GetRateTemplate(RateNames.StandardRate, BusinessDayRates.DayRate, dt.DateEntity);
                         ApplicableRates.Add(rateTemplate);
                     }                        
                     else
@@ -100,7 +101,7 @@ namespace Models
                             //don't charge if the previous day was Sat/Non business day
                             // you can only charge once 10 dollars for the whole weekend (sat+sun)
                             var fee =  !Helper.IsBusinessDay(previousDay) ? 0 : WeekendRates.Rate;
-                            rateTemplate = GetRateTemplate(RateNames.WeekendRate, fee);
+                            rateTemplate = GetRateTemplate(RateNames.WeekendRate, fee , dt.DateEntity);
                             ApplicableRates.Add(rateTemplate);
                         }
 
@@ -112,7 +113,7 @@ namespace Models
                 if (Helper.IsBusinessDay(EndDate))
                 {
                     var fee =  Helper.CalculateStandardRate(EndDate.Subtract(EndDate.Date).TotalHours);
-                    rateTemplate = GetRateTemplate(RateNames.StandardRate, fee);
+                    rateTemplate = GetRateTemplate(RateNames.StandardRate, fee ,EndDate.Date );
                     ApplicableRates.Add(rateTemplate);
                 }
                 else
@@ -123,7 +124,7 @@ namespace Models
                         //don't charge if the previous day was Sat/Non business day
                         // you can only charge once 10 dollars for the whole weekend (sat+sun)
                         var fee = !Helper.IsBusinessDay(previousDay) ? 0 : WeekendRates.Rate;
-                        rateTemplate = GetRateTemplate(RateNames.WeekendRate, fee);
+                        rateTemplate = GetRateTemplate(RateNames.WeekendRate, fee , EndDate.Date);
                         ApplicableRates.Add(rateTemplate);
                     }
 
@@ -146,13 +147,13 @@ namespace Models
         }
 
 
-        private RateType GetRateTemplate(string rateName, double charge)
+        private RateType GetRateTemplate(string rateName, double charge, DateTime? date = null)
         {
             if (!string.IsNullOrEmpty(rateName))
             {
                 var rateTemplate = RateTypes.GetByName(rateName);
                 rateTemplate.Charge = charge;
-                return new RateType() { Charge = charge, EntryTime = rateTemplate.EntryTime, ExitTime = rateTemplate.ExitTime, Name = rateTemplate.Name };
+                return new RateType() { Charge = charge, EntryTime = rateTemplate.EntryTime, ExitTime = rateTemplate.ExitTime, Name = rateTemplate.Name, ActualDate = date };
 
             }
             return null;

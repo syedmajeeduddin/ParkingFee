@@ -20,6 +20,8 @@ namespace ParkingFeeCalculatorAPI
         /// <returns> Return a Charges Object that will contain the Rate objects containing the Rate Name and the charges against that Rate</returns>
         public Charges CalculateParkingFee(DateTime startDate , DateTime endDate)
         {
+            try { 
+            
             Charges _charges = null;
             if (startDate < endDate)
             {
@@ -28,14 +30,14 @@ namespace ParkingFeeCalculatorAPI
                
                 // Early Bird Rate applicable only when the 
                 // check in and check out happens on same day
-                // of a weekday
+                // of a weekday on the given times
                 if (Helper.IsEarlyBirdTime(startDate, endDate))
                 {
                     _charges.CalculateEarlyBirdRate();
                 }
                 // Night Rate applicable only when the 
                 // check in happens at night on Weekday and check out happens on 
-                //subsequent day
+                //subsequent day on the given time
                 else if (Helper.IsNightRateTime(startDate, endDate))
                 {
                     _charges.CalculateNighRate();
@@ -54,6 +56,11 @@ namespace ParkingFeeCalculatorAPI
             }
 
                 return _charges;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
