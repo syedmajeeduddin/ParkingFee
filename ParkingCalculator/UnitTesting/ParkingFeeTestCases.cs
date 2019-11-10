@@ -64,7 +64,10 @@ namespace UnitTesting
             var rateType = charge.ApplicableRates.FirstOrDefault();
 
             Assert.AreEqual(charge.TotalCharge, WeekendRates.Rate);
-            Assert.AreEqual(charge.ApplicableRates.Count, 1);
+            //Saturday and Sunday will use same Weekend Rate Template
+            // Saturday will be charged 10 dollars 
+            // Sunday will be charged 0 dollars 
+            Assert.AreEqual(charge.ApplicableRates.Count, 2);
             Assert.AreEqual(rateType.Name, RateNames.WeekendRate);
 
         }
